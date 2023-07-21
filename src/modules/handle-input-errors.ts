@@ -1,11 +1,18 @@
 import { validationResult } from 'express-validator';
 
-export const handleInputErrors = (req: any, res: any, next: any) => {
+const handleInputErrors = (req: any, res: any, next: any) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    res.json({ errors: errors.array() });
+    const errorsMessage = errors.array().reduce((errorObj: any, err: any) => {
+      errorObj[err.path] = err.msg;
+      return errorObj;
+    }, {});
+    const error = new Error(JSON.stringify(errorsMessage));
+    error.cause = 400;
+    next(error);
   }
   next();
 };
+
+export default handleInputErrors;

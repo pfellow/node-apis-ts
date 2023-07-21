@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { handleInputErrors } from './modules/handle-input-errors';
+import handleInputErrors from './modules/handle-input-errors';
 import {
   createProduct,
   deleteProduct,
@@ -26,13 +26,13 @@ router.get('/product', getProducts);
 router.get('/product/:id', getOneProduct);
 router.put(
   '/product/:id',
-  body('name').isLength({ min: 5 }),
+  body('name').isLength({ min: 5, max: 255 }).isString(),
   handleInputErrors,
   updateProduct
 );
 router.post(
   '/product',
-  body('name').isLength({ min: 5 }),
+  body('name').isLength({ min: 5, max: 255 }).isString(),
   handleInputErrors,
   createProduct
 );
